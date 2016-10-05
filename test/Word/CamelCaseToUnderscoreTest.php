@@ -38,13 +38,13 @@ class CamelCaseToUnderscoreTest extends TestCase
         $filtered = $filter($string);
 
         $this->assertNotEquals($string, $filtered);
-        $this->assertEquals('Pa2_Title', $filtered);
+        $this->assertEquals('Pa_2_Title', $filtered);
 
         $string = 'Pa2aTitle';
         $filter   = new CamelCaseToUnderscoreFilter();
         $filtered = $filter($string);
 
         $this->assertNotEquals($string, $filtered);
-        $this->assertEquals('Pa2a_Title', $filtered);
+        $this->assertEquals('Pa_2a_Title', $filtered);
     }
 }

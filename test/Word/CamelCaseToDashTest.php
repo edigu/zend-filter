@@ -23,4 +23,31 @@ class CamelCaseToDashTest extends TestCase
         $this->assertNotEquals($string, $filtered);
         $this->assertEquals('Camel-Cased-Words', $filtered);
     }
+
+    /**
+     * @dataProvider camelizedStrings
+     */
+    public function testFilterSeparatesCamelCasedWordsContainingNumbersWithDashes($camel, $dashed)
+    {
+        $filter   = new CamelCaseToDashFilter();
+        $filtered = $filter($camel);
+        $this->assertNotEquals($camel, $filtered);
+        $this->assertEquals($dashed, $filtered);
+    }
+
+    /**
+     * Provides CamelizedStrings to test
+     *
+     * @return array
+     */
+    public function camelizedStrings()
+    {
+        return [
+            [ 'CamelCasedWith2016Numbers', 'Camel-Cased-With-2016-Numbers' ],
+            [ '10NumbersAsPrefix', '10-Numbers-As-Prefix' ],
+            [ 'NumberSuffix42', 'Number-Suffix-42' ],
+            [ 'lower50Upper', 'lower-50-Upper' ],
+            [ 'dashed-2016Bar', 'dashed-2016-Bar'],
+        ];
+    }
 }

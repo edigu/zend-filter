@@ -26,10 +26,18 @@ class CamelCaseToSeparator extends AbstractSeparator
         }
 
         if (StringUtils::hasPcreUnicodeSupport()) {
-            $pattern     = ['#(?<=(?:\p{Lu}))(\p{Lu}\p{Ll})#', '#(?<=(?:\p{Ll}|\p{Nd}))(\p{Lu})#'];
-            $replacement = [$this->separator . '\1', $this->separator . '\1'];
+            /**
+             * First: Match right after a lowercase letter or digit following a capital letter or
+             * before a capital letter with a lowercese letter on it's right.
+             *
+             * Second: Match right after a lowercase letter following zero or more digits
+             * or a capital letter
+             */
+            $pattern = ['#(?<=\p{Ll}|\p{Nd})(?=\p{Lu})|(?<=\p{Lu})(?=\p{Lu}\p{Ll})#', '#(?<=(?:\p{Ll}))(\p{Lu}|(\p{Nd}+))#'];
+            $replacement = [ $this->separator . '\1', $this->separator . '\1',
+            ];
         } else {
-            $pattern     = ['#(?<=(?:[A-Z]))([A-Z]+)([A-Z][a-z])#', '#(?<=(?:[a-z0-9]))([A-Z])#'];
+            $pattern     = [ '#(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])#', '#(?<=(?:[a-z]))([A-Z]|([0-9]+))#' ];
             $replacement = ['\1' . $this->separator . '\2', $this->separator . '\1'];
         }
 
